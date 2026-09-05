@@ -19,11 +19,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include("core.urls")),                            #  головна сторінка
-    path("users", include("users.urls")),                      #  автентифікація, профілі
-    path("diary/", include("diary.urls")),                     #  електронний щоденник
-    path("forum/", include("forum.urls")),                     #  форум
-    path("events/", include("event_calendar.urls")),           #  події та календар
-    path("annonc/", include("announsement.urls")),             #  оголошення
-    path("survey/", include("survey.urls")),                   #  опитування
+    path("", include("core.urls", namespace="core")),                      #  головна сторінка
+    path("users", include("users.urls", namespace="users")),               #  автентифікація, профілі
+    path("diary/", include("diary.urls", namespace="diary")),              #  електронний щоденник
+    path("forum/", include("forum.urls", namespace="forum")),              #  форум
+    path("events/", include("event_calendar.urls", namespace="events")),   #  події та календар
+    path("annonc/", include("announcement.urls", namespace="annonc")),     #  оголошення
+    path("survey/", include("survey.urls", namespace="survey")),           #  опитування
 ]
