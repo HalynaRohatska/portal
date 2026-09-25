@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Форум - Гілки</title>
+</head>
+<body>
+    <h1>Всі гілки форуму</h1>
+    
+    {% if error %}
+        <div style="color: red;">
+            {% for msg in error %} <p>{{ msg }}</p> {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if user.is_staff or user.is_superuser %}
+        <h3>Створити нову гілку</h3>
+        <form action="{% url 'forum:create_thread' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Назва гілки" required>
+            <button type="submit">Створити</button>
+        </form>
+    {% endif %}
+
+    <ul>
+        {% for thread in threads %}
+            <li>
+                <a href="{% url 'forum:thread_detail' thread.id %}">{{ thread.title }}</a> 
+                (Автор: {{ thread.author.username }})
+                {% if user.is_staff or user.is_superuser %}
+                    <a href="{% url 'forum:delete_thread' thread.id %}" style="color: red; margin-left: 10px;">[Видалити]</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Гілок форуму ще немає.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

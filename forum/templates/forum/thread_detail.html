@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ thread.title }}</title>
+</head>
+<body>
+    <a href="{% url 'forum:forum_index' %}">← Назад до списку гілок</a>
+    <h1>Гілка: {{ thread.title }}</h1>
+    <p>Автор теми: {{ thread.author.username }}</p>
+
+    {% if error %}
+        <div style="color: red;">
+            {% for msg in error %} <p>{{ msg }}</p> {% endfor %}
+        </div>
+    {% endif %}
+
+    <h3>Повідомлення:</h3>
+    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+        {% for message in messages %}
+            <div style="margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 5px;">
+                <strong>{{ message.author.username }}</strong> <small style="color: #666;">({{ message.created_at }})</small>
+                <p>{{ message.text }}</p>
+            </div>
+        {% empty %}
+            <p>У цій гілці ще немає повідомлень.</p>
+        {% endfor %}
+    </div>
+
+    {% if user.is_authenticated %}
+        <h3>Залишити повідомлення</h3>
+        <form action="{% url 'forum:create_message' thread.id %}" method="post">
+            {% csrf_token %}
+            <textarea name="text" rows="4" cols="50" placeholder="Ваше повідомлення..." required></textarea><br><br>
+            <button type="submit">Надіслати</button>
+        </form>
+    {% else %}
+        <p><a href="/users/login/">Увійдіть</a>, щоб залишати повідомлення.</p>
+    {% endif %}
+</body>
+</html>
