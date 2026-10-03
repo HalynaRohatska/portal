@@ -1,0 +1,2860 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Портал групи{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+    <style>
+
+        :root {
+            --bg: #020617;
+            --bg-deep: #01030a;
+            --sidebar: rgba(5, 10, 24, .94);
+
+            --blue: #3b82f6;
+            --blue-light: #60a5fa;
+            --purple: #8b5cf6;
+            --cyan: #22d3ee;
+
+            --green: #22c55e;
+            --red: #ef4444;
+
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --muted2: #64748b;
+
+            --border: rgba(148, 163, 184, .12);
+
+            --sidebar-width: 270px;
+            --sidebar-mini: 74px;
+
+            --header-height: 70px;
+
+            --ease: cubic-bezier(.2,.8,.2,1);
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            min-height: 100%;
+            background: var(--bg-deep);
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+
+            color: var(--text);
+
+            font-family:
+                "Inter",
+                system-ui,
+                sans-serif;
+
+            background: var(--bg-deep);
+
+            overflow-x: hidden;
+
+            -webkit-font-smoothing: antialiased;
+        }
+
+
+        a {
+            color: inherit;
+        }
+
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+
+        /* =====================================================
+           APP
+        ===================================================== */
+
+        .app {
+            position: relative;
+
+            min-height: 100vh;
+
+            isolation: isolate;
+
+            background:
+
+                radial-gradient(
+                    800px 600px at 10% 0%,
+                    rgba(37,99,235,.18),
+                    transparent 65%
+                ),
+
+                radial-gradient(
+                    800px 600px at 90% 100%,
+                    rgba(139,92,246,.13),
+                    transparent 65%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #01030a,
+                    #020817 45%,
+                    #03102a 75%,
+                    #01030a
+                );
+        }
+
+
+        .app::before {
+            content: "";
+
+            position: fixed;
+            inset: 0;
+
+            pointer-events: none;
+
+            z-index: -3;
+
+            opacity: .25;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(96,165,250,.035) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(96,165,250,.035) 1px,
+                    transparent 1px
+                );
+
+            background-size: 70px 70px;
+
+            mask-image:
+                radial-gradient(
+                    ellipse at center,
+                    black,
+                    transparent 82%
+                );
+        }
+
+
+        .app::after {
+            content: "";
+
+            position: fixed;
+
+            width: 600px;
+            height: 600px;
+
+            left: 50%;
+            top: 40%;
+
+            transform: translate(-50%, -50%);
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: -2;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(37,99,235,.08),
+                    transparent 68%
+                );
+
+            filter: blur(20px);
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed;
+
+            top: 14px;
+            left: 14px;
+            bottom: 14px;
+
+            z-index: 500;
+
+            width: var(--sidebar-width);
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 14px;
+
+            border:
+                1px solid
+                rgba(148,163,184,.13);
+
+            border-radius: 22px;
+
+            background: var(--sidebar);
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.45),
+                inset 0 1px rgba(255,255,255,.055);
+
+            backdrop-filter:
+                blur(24px)
+                saturate(140%);
+
+            -webkit-backdrop-filter:
+                blur(24px)
+                saturate(140%);
+
+            transition:
+                width .4s var(--ease),
+                transform .4s var(--ease);
+        }
+
+
+        .sidebar.collapsed {
+            width: var(--sidebar-mini);
+        }
+
+
+        /* =====================================================
+           SIDEBAR TOP
+        ===================================================== */
+
+        .sidebar-top {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 10px;
+
+            padding: 4px 3px 18px;
+        }
+
+
+        /* =====================================================
+           BRAND
+        ===================================================== */
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            min-width: 0;
+
+            text-decoration: none;
+        }
+
+
+        .brand-icon {
+            flex: 0 0 auto;
+
+            width: 40px;
+            height: 40px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #60a5fa,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 10px 25px
+                rgba(37,99,235,.32);
+        }
+
+
+        .brand-text {
+            overflow: hidden;
+
+            white-space: nowrap;
+
+            transition: opacity .2s ease;
+        }
+
+
+        .brand-text strong {
+            display: block;
+
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+
+        .brand-text small {
+            display: block;
+
+            margin-top: 2px;
+
+            color: var(--muted2);
+
+            font-size: 9px;
+        }
+
+
+        .sidebar.collapsed .brand-text {
+            width: 0;
+            opacity: 0;
+        }
+
+
+        /* =====================================================
+           SIDEBAR TOGGLE
+        ===================================================== */
+
+        .sidebar-toggle {
+            flex: 0 0 auto;
+
+            width: 32px;
+            height: 32px;
+
+            display: grid;
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            border-radius: 9px;
+
+            color: var(--muted);
+
+            background:
+                rgba(255,255,255,.035);
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+
+        .sidebar-toggle:hover {
+            color: white;
+
+            background:
+                rgba(255,255,255,.08);
+
+            border-color:
+                rgba(96,165,250,.25);
+        }
+
+
+        .sidebar.collapsed .sidebar-toggle i {
+            transform: rotate(180deg);
+        }
+
+
+        /* =====================================================
+           PROFILE
+        ===================================================== */
+
+        .profile-card {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 16px;
+
+            padding: 10px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.06);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            overflow: hidden;
+        }
+
+
+        .avatar {
+            position: relative;
+
+            flex: 0 0 auto;
+
+            width: 34px;
+            height: 34px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 11px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+        }
+
+
+        .avatar::after {
+            content: "";
+
+            position: absolute;
+
+            right: -1px;
+            bottom: -1px;
+
+            width: 9px;
+            height: 9px;
+
+            border:
+                2px solid
+                #071020;
+
+            border-radius: 50%;
+
+            background: var(--green);
+        }
+
+
+        .profile-info {
+            min-width: 0;
+
+            transition:
+                opacity .2s ease;
+        }
+
+
+        .profile-info strong {
+            display: block;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+
+            font-size: 11px;
+        }
+
+
+        .profile-info span {
+            display: block;
+
+            margin-top: 2px;
+
+            color: var(--muted2);
+
+            font-size: 9px;
+        }
+
+
+        .sidebar.collapsed .profile-info {
+            width: 0;
+            opacity: 0;
+        }
+
+
+        /* =====================================================
+           NAV TITLE
+        ===================================================== */
+
+        .nav-title {
+            margin: 8px 7px 7px;
+
+            color: #475569;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: .12em;
+
+            transition:
+                opacity .2s ease;
+        }
+
+
+        .sidebar.collapsed .nav-title {
+            opacity: 0;
+
+            height: 0;
+
+            margin: 0;
+
+            overflow: hidden;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        .sidebar-nav {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 3px;
+
+            overflow-y: auto;
+
+            overflow-x: hidden;
+
+            padding-right: 2px;
+        }
+
+
+        .sidebar-nav::-webkit-scrollbar {
+            width: 3px;
+        }
+
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background:
+                rgba(255,255,255,.10);
+
+            border-radius: 10px;
+        }
+
+
+        .nav-item {
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            min-height: 41px;
+
+            padding: 0 11px;
+
+            border-radius: 12px;
+
+            color: var(--muted);
+
+            text-decoration: none;
+
+            overflow: hidden;
+
+            transition:
+                color .2s ease,
+                background .2s ease,
+                transform .2s var(--ease);
+        }
+
+
+        .nav-item i {
+            flex: 0 0 auto;
+
+            width: 20px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            transition: color .2s ease;
+        }
+
+
+        .nav-item span {
+            white-space: nowrap;
+
+            font-size: 10.5px;
+
+            font-weight: 600;
+
+            transition: opacity .2s ease;
+        }
+
+
+        .nav-item:hover {
+            color: white;
+
+            background:
+                rgba(255,255,255,.055);
+
+            transform:
+                translateX(2px);
+        }
+
+
+        .nav-item:hover i {
+            color: var(--blue-light);
+        }
+
+
+        /* =====================================================
+           ACTIVE
+        ===================================================== */
+
+        .nav-item.active {
+            color: white;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(37,99,235,.20),
+                    rgba(37,99,235,.055)
+                );
+
+            border:
+                1px solid
+                rgba(96,165,250,.10);
+        }
+
+
+        .nav-item.active i {
+            color: var(--blue-light);
+
+            filter:
+                drop-shadow(
+                    0 0 6px
+                    rgba(96,165,250,.6)
+                );
+        }
+
+
+        .nav-item.active::before {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            top: 8px;
+            bottom: 8px;
+
+            width: 3px;
+
+            border-radius:
+                0 5px 5px 0;
+
+            background:
+                linear-gradient(
+                    #60a5fa,
+                    #6366f1
+                );
+
+            box-shadow:
+                0 0 10px
+                rgba(96,165,250,.7);
+        }
+
+
+        .sidebar.collapsed .nav-item {
+            justify-content: center;
+
+            padding: 0;
+        }
+
+
+        .sidebar.collapsed .nav-item span {
+            width: 0;
+            opacity: 0;
+        }
+
+
+        /* =====================================================
+           BOTTOM
+        ===================================================== */
+
+        .sidebar-bottom {
+            margin-top: auto;
+
+            padding-top: 12px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,.06);
+        }
+
+
+        .logout {
+            color: #f87171;
+
+            border: 0;
+
+            width: 100%;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            text-align: left;
+        }
+
+
+        .logout i {
+            color: #ef4444;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+            min-height: 100vh;
+
+            margin-left:
+                calc(var(--sidebar-width) + 28px);
+
+            transition:
+                margin-left .4s var(--ease);
+        }
+
+
+        body.sidebar-collapsed .main {
+            margin-left:
+                calc(var(--sidebar-mini) + 28px);
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+            height: var(--header-height);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 32px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.05);
+
+            background:
+                rgba(2,8,23,.35);
+
+            backdrop-filter:
+                blur(14px);
+        }
+
+
+        .topbar-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .page-label {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        .mobile-menu {
+            display: none;
+
+            width: 38px;
+            height: 38px;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            border-radius: 10px;
+
+            color: var(--muted);
+
+            background:
+                rgba(255,255,255,.03);
+
+            cursor: pointer;
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .site-content {
+            position: relative;
+
+            z-index: 2;
+
+            min-height:
+                calc(100vh - var(--header-height));
+
+            padding: 32px;
+        }
+
+
+        .dashboard {
+            max-width: 1200px;
+
+            margin: 30px auto;
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 42px;
+
+            border:
+                1px solid
+                rgba(148,163,184,.12);
+
+            border-radius: 26px;
+
+            background:
+
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(99,102,241,.15),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    145deg,
+                    rgba(15,23,42,.72),
+                    rgba(2,8,23,.72)
+                );
+
+            box-shadow:
+                0 30px 80px
+                rgba(0,0,0,.35);
+        }
+
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .hero-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 6px 10px;
+
+            border:
+                1px solid
+                rgba(96,165,250,.15);
+
+            border-radius: 999px;
+
+            color: #93c5fd;
+
+            background:
+                rgba(37,99,235,.07);
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: .08em;
+        }
+
+
+        .hero h1 {
+            max-width: 760px;
+
+            margin: 18px 0 10px;
+
+            font-size:
+                clamp(32px, 5vw, 58px);
+
+            line-height: 1.02;
+
+            letter-spacing: -.055em;
+        }
+
+
+        .hero h1 span {
+            background:
+                linear-gradient(
+                    90deg,
+                    #60a5fa,
+                    #22d3ee,
+                    #8b5cf6
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .hero p {
+            max-width: 720px;
+
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           MODULE GRID
+        ===================================================== */
+
+        .module-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+
+            margin-top: 28px;
+        }
+
+
+        .module-card {
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            min-height: 82px;
+
+            padding: 15px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            border-radius: 16px;
+
+            color: white;
+
+            background:
+                rgba(15,23,42,.45);
+
+            text-decoration: none;
+
+            overflow: hidden;
+
+            transition:
+                .25s var(--ease);
+        }
+
+
+        .module-card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(96,165,250,.28);
+
+            background:
+                rgba(37,99,235,.09);
+
+            box-shadow:
+                0 15px 35px
+                rgba(0,0,0,.2);
+        }
+
+
+        .module-icon {
+            width: 42px;
+            height: 42px;
+
+            flex: 0 0 auto;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 12px;
+
+            color: #93c5fd;
+
+            background:
+                rgba(37,99,235,.10);
+        }
+
+
+        .module-card strong {
+            display: block;
+
+            font-size: 11px;
+        }
+
+
+        .module-card small {
+            display: block;
+
+            margin-top: 4px;
+
+            color: var(--muted2);
+
+            font-size: 8.5px;
+
+            line-height: 1.4;
+        }
+
+
+        .module-arrow {
+            margin-left: auto;
+
+            color: #475569;
+
+            transition: .2s ease;
+        }
+
+
+        .module-card:hover .module-arrow {
+            color: var(--blue-light);
+
+            transform:
+                translateX(3px);
+        }
+
+
+        .module-card.active {
+            border-color:
+                rgba(96,165,250,.28);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(37,99,235,.15),
+                    rgba(99,102,241,.06)
+                );
+
+            box-shadow:
+                0 12px 35px
+                rgba(37,99,235,.10);
+        }
+
+
+        .module-card.active .module-icon {
+            color: #bfdbfe;
+
+            background:
+                rgba(37,99,235,.18);
+
+            box-shadow:
+                0 0 18px
+                rgba(37,99,235,.15);
+        }
+
+
+        .module-card.active .module-arrow {
+            color: var(--blue-light);
+        }
+
+
+        /* =====================================================
+           GUEST
+        ===================================================== */
+
+        .guest-hero {
+            text-align: center;
+        }
+
+
+        .guest-hero .hero-badge {
+            margin: 0 auto;
+        }
+
+
+        .guest-hero h1 {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        .guest-hero p {
+            margin: 0 auto;
+
+            max-width: 680px;
+        }
+
+
+        .guest-actions {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 28px;
+        }
+
+
+        .guest-button {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            min-height: 44px;
+
+            padding: 0 18px;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            transition: .2s var(--ease);
+        }
+
+
+        .guest-button.primary {
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #6366f1
+                );
+
+            border:
+                1px solid
+                rgba(147,197,253,.25);
+
+            box-shadow:
+                0 10px 30px
+                rgba(37,99,235,.25);
+        }
+
+
+        .guest-button.primary:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 15px 35px
+                rgba(37,99,235,.35);
+        }
+
+
+        .guest-button.secondary {
+            color: #cbd5e1;
+
+            background:
+                rgba(255,255,255,.035);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+        }
+
+
+        .guest-button.secondary:hover {
+            color: white;
+
+            background:
+                rgba(255,255,255,.07);
+
+            border-color:
+                rgba(96,165,250,.22);
+        }
+
+
+        .guest-note {
+            margin-top: 17px;
+
+            color: #64748b;
+
+            font-size: 9px;
+        }
+
+
+        /* =====================================================
+           CONTENT WRAPPER
+        ===================================================== */
+
+        .content-wrapper {
+            max-width: 1200px;
+
+            margin: 24px auto 0;
+        }
+
+
+        .django-card {
+            padding: 25px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            border-radius: 20px;
+
+            background:
+                rgba(15,23,42,.55);
+
+            box-shadow:
+                0 20px 50px
+                rgba(0,0,0,.25);
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .site-footer {
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 30px 32px 50px;
+
+            color: #475569;
+
+            text-align: center;
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .module-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+        }
+
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                transform:
+                    translateX(
+                        calc(-100% - 20px)
+                    );
+            }
+
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+
+            .main,
+            body.sidebar-collapsed .main {
+                margin-left: 0;
+            }
+
+
+            .mobile-menu {
+                display: grid;
+            }
+
+
+            .topbar {
+                padding: 0 16px;
+            }
+
+
+            .site-content {
+                padding: 20px 16px;
+            }
+
+
+            .module-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .hero {
+                padding: 28px 22px;
+            }
+        }
+
+
+        @media (max-width: 500px) {
+
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+
+            .guest-actions {
+                flex-direction: column;
+            }
+
+
+            .guest-button {
+                width: 100%;
+            }
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+
+                animation-duration:
+                    .01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                transition-duration:
+                    .01ms !important;
+
+                scroll-behavior:
+                    auto !important;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ===================================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="sidebar-top">
+
+            <a href="/" class="brand">
+
+                <div class="brand-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+                <div class="brand-text">
+
+                    <strong>
+                        Портал групи
+                    </strong>
+
+                    <small>
+                        Інформаційний портал
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <button
+                class="sidebar-toggle"
+                id="sidebarToggle"
+                type="button"
+                aria-label="Згорнути меню"
+            >
+
+                <i class="fa-solid fa-chevron-left"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             USER
+        ================================================== -->
+
+        {% if user.is_authenticated %}
+
+        <div class="profile-card">
+
+            <div class="avatar">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+            <div class="profile-info">
+
+                <strong>
+                    {{ user.username }}
+                </strong>
+
+                {% if user.is_superuser %}
+
+                    <span>
+                        Адміністратор
+                    </span>
+
+                {% elif user.is_staff %}
+
+                    <span>
+                        Модератор
+                    </span>
+
+                {% else %}
+
+                    <span>
+                        Користувач
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             MAIN NAVIGATION
+        ================================================== -->
+
+        <div class="nav-title">
+            Розділи
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <!-- ГОЛОВНА -->
+
+            <a
+                href="/"
+                class="nav-item"
+                data-path="/"
+            >
+
+                <i class="fa-solid fa-house"></i>
+
+                <span>
+                    Головна
+                </span>
+
+            </a>
+
+
+            {% if user.is_authenticated %}
+
+
+            <!-- МІЙ АКАУНТ -->
+
+            <a
+                href="/users/profile/"
+                class="nav-item"
+                data-path="/users/profile/"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+                <span>
+                    Мій акаунт
+                </span>
+
+            </a>
+
+
+            <!-- ФОРУМ -->
+
+            <a
+                href="/forum/"
+                class="nav-item"
+                data-path="/forum/"
+            >
+
+                <i class="fa-solid fa-comments"></i>
+
+                <span>
+                    Форум
+                </span>
+
+            </a>
+
+
+            <!-- ЕЛЕКТРОННИЙ ЩОДЕННИК -->
+
+            <a
+                href="/diary/"
+                class="nav-item"
+                data-path="/diary/"
+            >
+
+                <i class="fa-solid fa-book-open"></i>
+
+                <span>
+                    Електронний щоденник
+                </span>
+
+            </a>
+
+
+            <!-- ПОДІЇ -->
+
+            <a
+                href="/events/"
+                class="nav-item"
+                data-path="/events/"
+            >
+
+                <i class="fa-solid fa-calendar-days"></i>
+
+                <span>
+                    Події
+                </span>
+
+            </a>
+
+
+            <!-- КАЛЕНДАР -->
+
+            <a
+                href="/calendar/"
+                class="nav-item"
+                data-path="/calendar/"
+            >
+
+                <i class="fa-solid fa-calendar"></i>
+
+                <span>
+                    Календар
+                </span>
+
+            </a>
+
+
+            <!-- ОПИТУВАННЯ -->
+
+            <a
+                href="/polls/"
+                class="nav-item"
+                data-path="/polls/"
+            >
+
+                <i class="fa-solid fa-square-poll-vertical"></i>
+
+                <span>
+                    Опитування
+                </span>
+
+            </a>
+
+
+            <!-- ГОЛОСУВАННЯ -->
+
+            <a
+                href="/voting/"
+                class="nav-item"
+                data-path="/voting/"
+            >
+
+                <i class="fa-solid fa-check-to-slot"></i>
+
+                <span>
+                    Голосування
+                </span>
+
+            </a>
+
+
+            <!-- ОГОЛОШЕННЯ -->
+
+            <a
+                href="/announcements/"
+                class="nav-item"
+                data-path="/announcements/"
+            >
+
+                <i class="fa-solid fa-bullhorn"></i>
+
+                <span>
+                    Оголошення
+                </span>
+
+            </a>
+
+
+            <!-- МАТЕРІАЛИ -->
+
+            <a
+                href="/materials/"
+                class="nav-item"
+                data-path="/materials/"
+            >
+
+                <i class="fa-solid fa-folder-open"></i>
+
+                <span>
+                    Матеріали
+                </span>
+
+            </a>
+
+
+            <!-- ПОРТФОЛІО -->
+
+            <a
+                href="/portfolio/"
+                class="nav-item"
+                data-path="/portfolio/"
+            >
+
+                <i class="fa-solid fa-briefcase"></i>
+
+                <span>
+                    Портфоліо
+                </span>
+
+            </a>
+
+
+            <!-- ГАЛЕРЕЯ -->
+
+            <a
+                href="/gallery/"
+                class="nav-item"
+                data-path="/gallery/"
+            >
+
+                <i class="fa-solid fa-images"></i>
+
+                <span>
+                    Галерея
+                </span>
+
+            </a>
+
+
+            {% endif %}
+
+        </nav>
+
+
+        <!-- =================================================
+             MANAGEMENT
+        ================================================== -->
+
+        {% if user.is_authenticated and user.is_staff %}
+
+        <div class="nav-title">
+            Керування
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            {% if user.is_superuser %}
+
+            <!-- АДМІНІСТРАТОР -->
+
+            <a
+                href="/admin/"
+                class="nav-item"
+                data-path="/admin/"
+            >
+
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                <span>
+                    Адмін-панель
+                </span>
+
+            </a>
+
+            {% endif %}
+
+
+            <!-- ФОРУМ -->
+
+            <a
+                href="/forum/manage/"
+                class="nav-item"
+                data-path="/forum/manage/"
+            >
+
+                <i class="fa-solid fa-comments"></i>
+
+                <span>
+                    Керування форумом
+                </span>
+
+            </a>
+
+
+            <!-- ПОДІЇ -->
+
+            <a
+                href="/events/manage/"
+                class="nav-item"
+                data-path="/events/manage/"
+            >
+
+                <i class="fa-solid fa-calendar-plus"></i>
+
+                <span>
+                    Керування подіями
+                </span>
+
+            </a>
+
+
+            <!-- ОПИТУВАННЯ -->
+
+            <a
+                href="/polls/manage/"
+                class="nav-item"
+                data-path="/polls/manage/"
+            >
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                <span>
+                    Керування опитуваннями
+                </span>
+
+            </a>
+
+
+            <!-- ГОЛОСУВАННЯ -->
+
+            <a
+                href="/voting/manage/"
+                class="nav-item"
+                data-path="/voting/manage/"
+            >
+
+                <i class="fa-solid fa-check-double"></i>
+
+                <span>
+                    Керування голосуваннями
+                </span>
+
+            </a>
+
+
+            <!-- ОГОЛОШЕННЯ -->
+
+            <a
+                href="/announcements/manage/"
+                class="nav-item"
+                data-path="/announcements/manage/"
+            >
+
+                <i class="fa-solid fa-bullhorn"></i>
+
+                <span>
+                    Керування оголошеннями
+                </span>
+
+            </a>
+
+
+            <!-- МАТЕРІАЛИ -->
+
+            <a
+                href="/materials/manage/"
+                class="nav-item"
+                data-path="/materials/manage/"
+            >
+
+                <i class="fa-solid fa-file-arrow-up"></i>
+
+                <span>
+                    Керування матеріалами
+                </span>
+
+            </a>
+
+
+            <!-- ГАЛЕРЕЯ -->
+
+            <a
+                href="/gallery/manage/"
+                class="nav-item"
+                data-path="/gallery/manage/"
+            >
+
+                <i class="fa-solid fa-image"></i>
+
+                <span>
+                    Модерація галереї
+                </span>
+
+            </a>
+
+        </nav>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             LOGIN / LOGOUT
+        ================================================== -->
+
+        <div class="sidebar-bottom">
+
+            {% if user.is_authenticated %}
+
+            <form
+                method="post"
+                action="{% url 'users:logout' %}"
+                style="margin:0;"
+            >
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{% url 'users:login' %}"
+                >
+
+                <button
+                    type="submit"
+                    class="nav-item logout"
+                >
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>
+                        Вийти
+                    </span>
+
+                </button>
+
+            </form>
+
+            {% else %}
+
+            <a
+                href="{% url 'users:login' %}"
+                class="nav-item"
+            >
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                <span>
+                    Увійти
+                </span>
+
+            </a>
+
+
+            <a
+                href="{% url 'users:register' %}"
+                class="nav-item"
+            >
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                <span>
+                    Реєстрація
+                </span>
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ===================================================== -->
+
+    <div class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="mobile-menu"
+                    id="mobileMenu"
+                    type="button"
+                    aria-label="Відкрити меню"
+                >
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+
+                <span class="page-label">
+                    Портал групи
+                </span>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <main class="site-content">
+
+            {% block page_content %}
+
+            <section class="dashboard">
+
+
+                {% if user.is_authenticated %}
+
+
+                <!-- =================================================
+                     AUTHENTICATED USER
+                ================================================== -->
+
+                <div class="hero">
+
+                    <div class="hero-content">
+
+
+                        <div class="hero-badge">
+
+                            <i class="fa-solid fa-users"></i>
+
+                            Портал групи
+
+                        </div>
+
+
+                        <h1>
+
+                            Усе необхідне
+                            <span>
+                                в одному місці.
+                            </span>
+
+                        </h1>
+
+
+                        <p>
+
+                            Переглядайте інформацію групи,
+                            спілкуйтеся на форумі, перевіряйте
+                            оцінки, переглядайте події та календар,
+                            проходьте опитування, беріть участь
+                            у голосуваннях, переглядайте оголошення,
+                            матеріали, портфоліо та галерею.
+
+                        </p>
+
+
+                        <!-- =================================================
+                             MODULES
+                        ================================================== -->
+
+                        <div class="module-grid">
+
+
+                            <!-- МІЙ АКАУНТ -->
+
+                            <a
+                                href="/users/profile/"
+                                class="module-card"
+                                data-path="/users/profile/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-user"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Мій акаунт
+                                    </strong>
+
+                                    <small>
+                                        Особисті дані та налаштування
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ФОРУМ -->
+
+                            <a
+                                href="/forum/"
+                                class="module-card"
+                                data-path="/forum/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-comments"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Форум
+                                    </strong>
+
+                                    <small>
+                                        Повідомлення та обговорення
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ЩОДЕННИК -->
+
+                            <a
+                                href="/diary/"
+                                class="module-card"
+                                data-path="/diary/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-book-open"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Електронний щоденник
+                                    </strong>
+
+                                    <small>
+                                        Оцінки всіх учнів
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ПОДІЇ -->
+
+                            <a
+                                href="/events/"
+                                class="module-card"
+                                data-path="/events/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-calendar-days"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Події
+                                    </strong>
+
+                                    <small>
+                                        Події групи
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- КАЛЕНДАР -->
+
+                            <a
+                                href="/calendar/"
+                                class="module-card"
+                                data-path="/calendar/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-calendar"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Календар
+                                    </strong>
+
+                                    <small>
+                                        Календар подій
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ОПИТУВАННЯ -->
+
+                            <a
+                                href="/polls/"
+                                class="module-card"
+                                data-path="/polls/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-square-poll-vertical"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Опитування
+                                    </strong>
+
+                                    <small>
+                                        Проходження та результати
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ГОЛОСУВАННЯ -->
+
+                            <a
+                                href="/voting/"
+                                class="module-card"
+                                data-path="/voting/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-check-to-slot"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Голосування
+                                    </strong>
+
+                                    <small>
+                                        Участь та результати
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ОГОЛОШЕННЯ -->
+
+                            <a
+                                href="/announcements/"
+                                class="module-card"
+                                data-path="/announcements/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-bullhorn"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Оголошення
+                                    </strong>
+
+                                    <small>
+                                        Важливі повідомлення
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- МАТЕРІАЛИ -->
+
+                            <a
+                                href="/materials/"
+                                class="module-card"
+                                data-path="/materials/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-folder-open"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Матеріали
+                                    </strong>
+
+                                    <small>
+                                        Файли, зображення та посилання
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ПОРТФОЛІО -->
+
+                            <a
+                                href="/portfolio/"
+                                class="module-card"
+                                data-path="/portfolio/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-briefcase"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Портфоліо
+                                    </strong>
+
+                                    <small>
+                                        Проєкти учнів
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                            <!-- ГАЛЕРЕЯ -->
+
+                            <a
+                                href="/gallery/"
+                                class="module-card"
+                                data-path="/gallery/"
+                            >
+
+                                <div class="module-icon">
+
+                                    <i class="fa-solid fa-images"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Галерея
+                                    </strong>
+
+                                    <small>
+                                        Фото та відео учнів
+                                    </small>
+
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right module-arrow"></i>
+
+                            </a>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {% else %}
+
+
+                <!-- =================================================
+                     GUEST
+                ================================================== -->
+
+                <div class="hero guest-hero">
+
+                    <div class="hero-content">
+
+
+                        <div class="hero-badge">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            Портал групи
+
+                        </div>
+
+
+                        <h1>
+
+                            Увійдіть до
+                            <span>
+                                порталу групи.
+                            </span>
+
+                        </h1>
+
+
+                        <p>
+
+                            Після входу ви отримаєте доступ
+                            до форуму, електронного щоденника,
+                            подій, календаря, опитувань,
+                            голосувань, оголошень, матеріалів,
+                            портфоліо та галереї.
+
+                        </p>
+
+
+                        <div class="guest-actions">
+
+                            <a
+                                href="{% url 'users:login' %}"
+                                class="guest-button primary"
+                            >
+
+                                <i class="fa-solid fa-right-to-bracket"></i>
+
+                                Увійти
+
+                            </a>
+
+
+                            <a
+                                href="{% url 'users:register' %}"
+                                class="guest-button secondary"
+                            >
+
+                                <i class="fa-solid fa-user-plus"></i>
+
+                                Реєстрація
+
+                            </a>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     DJANGO CONTENT
+                ================================================== -->
+
+                <div class="content-wrapper">
+
+                    {% block content %}
+                    {% endblock %}
+
+                </div>
+
+
+            </section>
+
+            {% endblock %}
+
+        </main>
+
+
+        <!-- FOOTER -->
+
+        {% block footer %}
+
+        <footer class="site-footer">
+
+            © {% now "Y" %} Портал групи
+
+        </footer>
+
+        {% endblock %}
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const toggle =
+        document.getElementById("sidebarToggle");
+
+    const mobileMenu =
+        document.getElementById("mobileMenu");
+
+
+    /* =====================================================
+       ACTIVE NAVIGATION
+    ===================================================== */
+
+    function setActiveNavigation() {
+
+        const currentPath =
+            window.location.pathname;
+
+
+        const navItems =
+            document.querySelectorAll(
+                ".nav-item[data-path]"
+            );
+
+
+        const moduleCards =
+            document.querySelectorAll(
+                ".module-card[data-path]"
+            );
+
+
+        navItems.forEach(function(item) {
+
+            item.classList.remove("active");
+
+        });
+
+
+        moduleCards.forEach(function(item) {
+
+            item.classList.remove("active");
+
+        });
+
+
+        let bestNavItem = null;
+        let bestNavLength = -1;
+
+
+        navItems.forEach(function(item) {
+
+            const path =
+                item.dataset.path;
+
+
+            if (!path) {
+                return;
+            }
+
+
+            if (path === "/") {
+
+                if (currentPath === "/") {
+
+                    bestNavItem = item;
+
+                    bestNavLength =
+                        path.length;
+                }
+
+                return;
+            }
+
+
+            if (
+                currentPath === path ||
+                currentPath.startsWith(path)
+            ) {
+
+                if (
+                    path.length >
+                    bestNavLength
+                ) {
+
+                    bestNavItem = item;
+
+                    bestNavLength =
+                        path.length;
+                }
+
+            }
+
+        });
+
+
+        if (bestNavItem) {
+
+            bestNavItem.classList.add("active");
+
+        }
+
+
+        let bestModule = null;
+        let bestModuleLength = -1;
+
+
+        moduleCards.forEach(function(card) {
+
+            const path =
+                card.dataset.path;
+
+
+            if (!path) {
+                return;
+            }
+
+
+            if (
+                currentPath === path ||
+                currentPath.startsWith(path)
+            ) {
+
+                if (
+                    path.length >
+                    bestModuleLength
+                ) {
+
+                    bestModule = card;
+
+                    bestModuleLength =
+                        path.length;
+                }
+
+            }
+
+        });
+
+
+        if (bestModule) {
+
+            bestModule.classList.add("active");
+
+        }
+
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        setActiveNavigation
+    );
+
+
+    /* =====================================================
+       DESKTOP SIDEBAR
+    ===================================================== */
+
+    if (toggle) {
+
+        toggle.addEventListener(
+            "click",
+            function() {
+
+                sidebar.classList.toggle(
+                    "collapsed"
+                );
+
+                document.body.classList.toggle(
+                    "sidebar-collapsed"
+                );
+
+
+                localStorage.setItem(
+                    "sidebarCollapsed",
+                    sidebar.classList.contains(
+                        "collapsed"
+                    )
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       RESTORE SIDEBAR
+    ===================================================== */
+
+    if (
+        localStorage.getItem(
+            "sidebarCollapsed"
+        ) === "true"
+    ) {
+
+        sidebar.classList.add(
+            "collapsed"
+        );
+
+        document.body.classList.add(
+            "sidebar-collapsed"
+        );
+
+    }
+
+
+    /* =====================================================
+       MOBILE MENU
+    ===================================================== */
+
+    if (mobileMenu) {
+
+        mobileMenu.addEventListener(
+            "click",
+            function() {
+
+                sidebar.classList.toggle(
+                    "mobile-open"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       CLICK OUTSIDE
+    ===================================================== */
+
+    document.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                window.innerWidth <= 850 &&
+                sidebar.classList.contains(
+                    "mobile-open"
+                ) &&
+                !sidebar.contains(event.target) &&
+                !mobileMenu.contains(event.target)
+            ) {
+
+                sidebar.classList.remove(
+                    "mobile-open"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       ESCAPE
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Escape") {
+
+                sidebar.classList.remove(
+                    "mobile-open"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       CLOSE MOBILE AFTER NAVIGATION
+    ===================================================== */
+
+    document.querySelectorAll(
+        ".nav-item[href]:not([href='#'])"
+    ).forEach(function(item) {
+
+        item.addEventListener(
+            "click",
+            function() {
+
+                if (
+                    window.innerWidth <= 850
+                ) {
+
+                    sidebar.classList.remove(
+                        "mobile-open"
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       RESPONSIVE SIDEBAR
+    ===================================================== */
+
+    window.addEventListener(
+        "resize",
+        function() {
+
+            if (
+                window.innerWidth > 850
+            ) {
+
+                sidebar.classList.remove(
+                    "mobile-open"
+                );
+
+            }
+
+        }
+    );
+
+</script>
+
+
+{% block extra_js %}
+{% endblock %}
+
+
+</body>
+
+</html>
