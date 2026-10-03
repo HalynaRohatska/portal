@@ -2,40 +2,74 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ thread.title }}</title>
 </head>
-<body>
-    <a href="{% url 'forum:forum_index' %}">← Назад до списку гілок</a>
-    <h1>Гілка: {{ thread.title }}</h1>
-    <p>Автор теми: {{ thread.author.username }}</p>
+<body style="margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f0f6fc; min-height: 100vh; color: #1e293b;">
 
-    {% if error %}
-        <div style="color: red;">
-            {% for msg in error %} <p>{{ msg }}</p> {% endfor %}
+    <!-- Верхняя синяя шапка -->
+    <header style="background-color: #5594d4; color: white; padding: 14px 30px; display: flex; align-items: center; font-size: 16px; font-weight: 500;">
+        <span style="margin-right: 8px; font-size: 18px;">💬</span> Мій форум
+    </header>
+
+    <!-- Главный контейнер -->
+    <main style="max-width: 800px; margin: 0 auto; padding: 30px 20px;">
+        
+        <!-- Кнопка «Назад» -->
+        <a href="{% url 'forum:forum_index' %}" style="color: #4c8cd4; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 20px; font-weight: 500;">← Назад до списку гілок</a>
+
+        <!-- Главная карточка темы (В стиле "Календарь 1") -->
+        <div style="background-color: #ffffff; border-radius: 8px; padding: 24px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03); margin-bottom: 30px; max-width: 650px;">
+            <h1 style="font-size: 22px; font-weight: 600; color: #4c8cd4; margin: 0 0 8px 0;">Гілка: {{ thread.title }}</h1>
+            <p style="color: #64748b; font-size: 14px; margin: 0;">Автор теми: {{ thread.author.username }}</p>
         </div>
-    {% endif %}
 
-    <h3>Повідомлення:</h3>
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
-        {% for message in messages %}
-            <div style="margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 5px;">
-                <strong>{{ message.author.username }}</strong> <small style="color: #666;">({{ message.created_at }})</small>
-                <p>{{ message.text }}</p>
+        <!-- Ошибки -->
+        {% if error %}
+            <div style="background-color: #fee2e2; border-left: 4px solid #ef4444; color: #b91c1c; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; max-width: 650px;">
+                {% for msg in error %} <p style="margin: 0 0 4px 0;">{{ msg }}</p> {% endfor %}
             </div>
-        {% empty %}
-            <p>У цій гілці ще немає повідомлень.</p>
-        {% endfor %}
-    </div>
+        {% endif %}
 
-    {% if user.is_authenticated %}
-        <h3>Залишити повідомлення</h3>
-        <form action="{% url 'forum:create_message' thread.id %}" method="post">
-            {% csrf_token %}
-            <textarea name="text" rows="4" cols="50" placeholder="Ваше повідомлення..." required></textarea><br><br>
-            <button type="submit">Надіслати</button>
-        </form>
-    {% else %}
-        <p><a href="/users/login/">Увійдіть</a>, щоб залишати повідомлення.</p>
-    {% endif %}
+        <!-- Блок сообщений -->
+        <h3 style="font-size: 16px; font-weight: 600; color: #334155; margin-bottom: 16px;">Повідомлення:</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; max-width: 650px;">
+            {% for message in messages %}
+                <!-- Каждое сообщение как отдельная аккуратная карточка -->
+                <div style="background-color: #ffffff; border-radius: 8px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: #334155; font-size: 14px;">{{ message.author.username }}</strong>
+                        <small style="color: #94a3b8; font-size: 12px;">{{ message.created_at }}</small>
+                    </div>
+                    <p style="color: #334155; font-size: 15px; margin: 4px 0 0 0; line-height: 1.5; word-break: break-word;">{{ message.text }}</p>
+                </div>
+            {% empty %}
+                <div style="color: #64748b; padding: 24px; background-color: #ffffff; border-radius: 8px; text-align: center; border: 1px dashed #cbd5e1;">
+                    У цій гілці ще немає повідомлень.
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Форма отправки сообщения -->
+        <div style="max-width: 650px;">
+            {% if user.is_authenticated %}
+                <h3 style="font-size: 16px; font-weight: 600; color: #334155; margin-bottom: 12px;">Залишити повідомлення</h3>
+                <form action="{% url 'forum:create_message' thread.id %}" method="post" style="display: flex; flex-direction: column; gap: 12px;">
+                    {% csrf_token %}
+                    <textarea name="text" rows="4" placeholder="Ваше повідомлення..." required style="width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; resize: vertical; font-family: inherit;"></textarea>
+                    <div>
+                        <button type="submit" style="background-color: #5594d4; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">Надіслати</button>
+                    </div>
+                </form>
+            {% else %}
+                <div style="background-color: #ffffff; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);">
+                    <p style="margin: 0; color: #64748b; font-size: 14px;"><a href="/users/login/" style="color: #4c8cd4; text-decoration: none; font-weight: 500;">Увійдіть</a>, щоб залишати повідомлення.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </main>
+
 </body>
 </html>
