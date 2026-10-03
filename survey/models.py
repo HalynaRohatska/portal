@@ -22,7 +22,7 @@ class Question(models.Model):
 
     def __str__(self):
         return self.text
-я
+
 class Choice(models.Model):
     question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
