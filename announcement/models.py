@@ -1,5 +1,5 @@
-from django.conf import settings
 from django.db import models
+from django.conf import settings
 from django.urls import reverse
  
  
@@ -46,4 +46,4 @@ class Announcement(models.Model):
         return self.title
  
     def get_absolute_url(self):
-        return reverse("announcements:detail", kwargs={"pk": self.pk})
+        return reverse("annonc:detail", kwargs={"pk": self.pk})
