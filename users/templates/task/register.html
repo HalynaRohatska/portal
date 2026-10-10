@@ -1,0 +1,896 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<style>
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+    --register-blue: #2563eb;
+    --register-blue-light: #60a5fa;
+    --register-cyan: #22d3ee;
+    --register-purple: #6366f1;
+
+    --register-white: #f8fafc;
+    --register-muted: #94a3b8;
+    --register-danger: #fb7185;
+}
+
+
+/* =========================================================
+   REGISTER CONTAINER
+   Фон НЕ задаємо — його бере base.html
+========================================================= */
+
+.cyber-register-wrapper {
+    position: relative;
+    isolation: isolate;
+
+    min-height: calc(100vh - 70px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    font-family: 'Inter', sans-serif;
+
+    overflow: hidden;
+
+    background: transparent;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.cyber-register-card {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 455px;
+
+    padding: 44px;
+
+    border-radius: 28px;
+
+    background: rgba(5, 12, 28, .72);
+
+    border: 1px solid rgba(148, 163, 184, .14);
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, .45),
+        0 0 45px rgba(37, 99, 235, .08),
+        inset 0 1px rgba(255, 255, 255, .10);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    overflow: hidden;
+
+    animation:
+        registerCardIn .55s cubic-bezier(.16, 1, .3, 1);
+}
+
+
+@keyframes registerCardIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================================================
+   TOP LIGHT
+========================================================= */
+
+.cyber-register-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 10%;
+
+    width: 80%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(96, 165, 250, .8),
+            rgba(34, 211, 238, .65),
+            transparent
+        );
+
+    opacity: .75;
+}
+
+
+/* =========================================================
+   INNER GLOW
+========================================================= */
+
+.cyber-register-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -120px;
+    right: -100px;
+
+    border-radius: 50%;
+
+    background: rgba(37, 99, 235, .18);
+
+    filter: blur(60px);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.cyber-register-header {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+
+    margin-bottom: 32px;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.cyber-register-icon {
+    position: relative;
+
+    width: 76px;
+    height: 76px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 22px;
+
+    color: white;
+
+    font-size: 26px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #60a5fa,
+            #2563eb 50%,
+            #4f46e5
+        );
+
+    border: 1px solid rgba(255, 255, 255, .18);
+
+    box-shadow:
+        0 12px 30px rgba(37, 99, 235, .28),
+        inset 0 1px rgba(255, 255, 255, .30);
+
+    animation:
+        registerIconFloat 4s ease-in-out infinite;
+}
+
+
+.cyber-register-icon::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -7px;
+
+    border-radius: 26px;
+
+    border: 1px solid rgba(96, 165, 250, .16);
+}
+
+
+@keyframes registerIconFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.cyber-register-title {
+    margin: 0;
+
+    color: var(--register-white);
+
+    font-size: 31px;
+
+    line-height: 1.1;
+
+    font-weight: 800;
+
+    letter-spacing: -1.4px;
+}
+
+
+.cyber-register-title span {
+    background:
+        linear-gradient(
+            90deg,
+            #60a5fa,
+            #22d3ee,
+            #818cf8
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+
+.cyber-register-subtitle {
+    margin: 10px 0 0;
+
+    color: #8b9bb2;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FIELDS
+========================================================= */
+
+.cyber-register-field {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 20px;
+}
+
+
+.cyber-register-field label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #cbd5e1;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.cyber-register-field input,
+.cyber-register-field select,
+.cyber-register-field textarea {
+    width: 100%;
+
+    min-height: 54px;
+
+    padding: 0 16px;
+
+    border: 1px solid rgba(255, 255, 255, .09);
+
+    border-radius: 14px;
+
+    outline: none;
+
+    color: white;
+
+    background: rgba(1, 7, 20, .58);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.cyber-register-field textarea {
+    padding-top: 14px;
+    padding-bottom: 14px;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   INPUT HOVER
+========================================================= */
+
+.cyber-register-field input:hover,
+.cyber-register-field select:hover,
+.cyber-register-field textarea:hover {
+    border-color: rgba(96, 165, 250, .28);
+}
+
+
+/* =========================================================
+   INPUT FOCUS
+========================================================= */
+
+.cyber-register-field input:focus,
+.cyber-register-field select:focus,
+.cyber-register-field textarea:focus {
+    border-color: rgba(59, 130, 246, .8);
+
+    background: rgba(3, 14, 34, .75);
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, .08),
+        0 0 22px rgba(37, 99, 235, .10);
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+.cyber-register-field input::placeholder,
+.cyber-register-field textarea::placeholder {
+    color: #475569;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.cyber-register-help {
+    margin-top: 8px;
+
+    padding: 10px 12px;
+
+    border: 1px solid rgba(255, 255, 255, .05);
+
+    border-radius: 10px;
+
+    color: #64748b;
+
+    background: rgba(15, 23, 42, .45);
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+.cyber-register-help ul {
+    margin: 4px 0 0;
+
+    padding-left: 16px;
+}
+
+
+/* =========================================================
+   GLOBAL ERRORS
+========================================================= */
+
+.cyber-register-errors {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 8px;
+
+    margin-top: 8px;
+    margin-bottom: 18px;
+
+    padding: 11px 13px;
+
+    border: 1px solid rgba(244, 63, 94, .16);
+
+    border-left: 3px solid var(--register-danger);
+
+    border-radius: 11px;
+
+    color: #fecdd3;
+
+    background: rgba(244, 63, 94, .07);
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+.cyber-register-errors i {
+    margin-top: 2px;
+
+    color: var(--register-danger);
+}
+
+
+/* =========================================================
+   FIELD ERRORS
+========================================================= */
+
+.cyber-register-field-errors {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 8px;
+
+    margin-top: 8px;
+
+    color: var(--register-danger);
+
+    font-size: 11px;
+
+    line-height: 1.45;
+
+    font-weight: 600;
+}
+
+
+.cyber-register-field-errors i {
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.cyber-register-btn {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    height: 55px;
+
+    margin-top: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    overflow: hidden;
+
+    border: none;
+
+    border-radius: 14px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            110deg,
+            #1d4ed8,
+            #2563eb,
+            #4f46e5
+        );
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 12px 30px rgba(37, 99, 235, .27),
+        inset 0 1px rgba(255, 255, 255, .22);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+
+/* =========================================================
+   BUTTON SHINE
+========================================================= */
+
+.cyber-register-btn::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 60%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, .20),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition: left .6s ease;
+}
+
+
+.cyber-register-btn:hover::before {
+    left: 140%;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+========================================================= */
+
+.cyber-register-btn:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.08);
+
+    box-shadow:
+        0 16px 35px rgba(37, 99, 235, .35),
+        0 0 25px rgba(59, 130, 246, .10);
+}
+
+
+.cyber-register-btn:active {
+    transform: translateY(0) scale(.99);
+}
+
+
+.cyber-register-btn span,
+.cyber-register-btn i {
+    position: relative;
+    z-index: 2;
+}
+
+
+.cyber-register-btn i {
+    transition: transform .2s ease;
+}
+
+
+.cyber-register-btn:hover i {
+    transform: translateX(4px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.cyber-register-footer {
+    position: relative;
+    z-index: 2;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, .06);
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 12.5px;
+}
+
+
+.cyber-register-link {
+    color: #60a5fa;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: color .2s ease;
+}
+
+
+.cyber-register-link:hover {
+    color: #93c5fd;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.register-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 14px;
+
+    color: #526176;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.register-status-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 8px rgba(34, 197, 94, .65);
+
+    animation:
+        registerStatusPulse 2s ease-in-out infinite;
+}
+
+
+@keyframes registerStatusPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .45;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .cyber-register-wrapper {
+        min-height: calc(100vh - 60px);
+
+        padding: 25px 14px;
+    }
+
+    .cyber-register-card {
+        padding: 32px 22px;
+
+        border-radius: 23px;
+    }
+
+    .cyber-register-title {
+        font-size: 27px;
+    }
+
+    .cyber-register-icon {
+        width: 68px;
+        height: 68px;
+
+        font-size: 23px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cyber-register-card,
+    .cyber-register-icon,
+    .register-status-dot {
+        animation: none;
+    }
+
+    .cyber-register-btn,
+    .cyber-register-btn::before {
+        transition: none;
+    }
+}
+
+</style>
+
+
+<div class="cyber-register-wrapper">
+
+    <div class="cyber-register-card">
+
+        <div class="cyber-register-header">
+
+            <div class="cyber-register-icon">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+
+            <h2 class="cyber-register-title">
+                Створіть <span>акаунт</span>
+            </h2>
+
+            <p class="cyber-register-subtitle">
+                Приєднуйтесь — це займе всього кілька секунд
+            </p>
+
+        </div>
+
+
+        <form method="post" novalidate>
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="cyber-register-errors">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <div>
+                        {{ form.non_field_errors }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            {% for field in form %}
+
+                <div class="cyber-register-field">
+
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+
+                    {{ field }}
+
+
+                    {% if field.errors %}
+
+                        <div class="cyber-register-field-errors">
+
+                            <i class="fa-solid fa-circle-exclamation"></i>
+
+                            <span>
+
+                                {% for error in field.errors %}
+
+                                    {{ error }}
+
+                                {% endfor %}
+
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if field.help_text %}
+
+                        <div class="cyber-register-help">
+
+                            <i
+                                class="fa-solid fa-circle-info"
+                                style="color:#60a5fa;margin-right:4px;"
+                            ></i>
+
+                            {{ field.help_text|safe }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+
+            <button
+                type="submit"
+                class="cyber-register-btn"
+            >
+
+                <span>
+                    Зареєструватися
+                </span>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </form>
+
+
+        <div class="cyber-register-footer">
+
+            Вже маєте акаунт?
+
+            <a
+                href="{% url 'users:login' %}"
+                class="cyber-register-link"
+            >
+                Увійти
+            </a>
+
+
+            <div class="register-status">
+
+                <span class="register-status-dot"></span>
+
+                Система працює
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

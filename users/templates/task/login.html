@@ -1,0 +1,752 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<style>
+:root {
+    --login-blue: #2563eb;
+    --login-blue-light: #60a5fa;
+    --login-cyan: #22d3ee;
+    --login-purple: #6366f1;
+    --login-white: #f8fafc;
+    --login-muted: #94a3b8;
+    --login-danger: #fb7185;
+}
+
+/* =========================================================
+   LOGIN CONTAINER
+   Фон НЕ задаємо — його бере base.html
+========================================================= */
+
+.cyber-login-wrapper {
+    position: relative;
+    isolation: isolate;
+
+    min-height: calc(100vh - 70px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    font-family: 'Inter', sans-serif;
+
+    overflow: hidden;
+
+    /* Дуже легке затемнення, щоб картка читалась */
+    background: transparent;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.cyber-login-card {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 455px;
+
+    padding: 44px;
+
+    border-radius: 28px;
+
+    background: rgba(5, 12, 28, .72);
+
+    border: 1px solid rgba(148, 163, 184, .14);
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, .45),
+        0 0 45px rgba(37, 99, 235, .08),
+        inset 0 1px rgba(255, 255, 255, .10);
+
+    /*
+       Значно дешевше за blur(32px) + saturate.
+       Якщо base має свій backdrop — вони не конфліктують.
+    */
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    overflow: hidden;
+
+    animation: loginCardIn .55s cubic-bezier(.16, 1, .3, 1);
+}
+
+
+/* Верхня світлова лінія */
+
+.cyber-login-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 10%;
+
+    width: 80%;
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(96, 165, 250, .8),
+        rgba(34, 211, 238, .65),
+        transparent
+    );
+
+    opacity: .75;
+}
+
+
+/* Невелике світіння всередині картки */
+
+.cyber-login-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -120px;
+    right: -100px;
+
+    border-radius: 50%;
+
+    background: rgba(37, 99, 235, .18);
+
+    filter: blur(60px);
+
+    pointer-events: none;
+}
+
+
+@keyframes loginCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.cyber-login-header {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+
+    margin-bottom: 32px;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.cyber-login-icon {
+    position: relative;
+
+    width: 76px;
+    height: 76px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 22px;
+
+    color: white;
+
+    font-size: 26px;
+
+    background: linear-gradient(
+        135deg,
+        #60a5fa,
+        #2563eb 50%,
+        #4f46e5
+    );
+
+    border: 1px solid rgba(255, 255, 255, .18);
+
+    box-shadow:
+        0 12px 30px rgba(37, 99, 235, .28),
+        inset 0 1px rgba(255, 255, 255, .30);
+
+    animation: loginIconFloat 4s ease-in-out infinite;
+}
+
+
+.cyber-login-icon::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -7px;
+
+    border-radius: 26px;
+
+    border: 1px solid rgba(96, 165, 250, .16);
+}
+
+
+@keyframes loginIconFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.cyber-login-title {
+    margin: 0;
+
+    color: var(--login-white);
+
+    font-size: 31px;
+
+    line-height: 1.1;
+
+    font-weight: 800;
+
+    letter-spacing: -1.4px;
+}
+
+
+.cyber-login-title span {
+    background: linear-gradient(
+        90deg,
+        #60a5fa,
+        #22d3ee,
+        #818cf8
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+
+.cyber-login-subtitle {
+    margin: 10px 0 0;
+
+    color: #8b9bb2;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FIELDS
+========================================================= */
+
+.cyber-login-field {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 20px;
+}
+
+
+.cyber-login-field label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #cbd5e1;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+
+.cyber-login-field input {
+    width: 100%;
+    height: 54px;
+
+    padding: 0 16px;
+
+    border: 1px solid rgba(255, 255, 255, .09);
+
+    border-radius: 14px;
+
+    outline: none;
+
+    color: white;
+
+    background: rgba(1, 7, 20, .58);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.cyber-login-field input:hover {
+    border-color: rgba(96, 165, 250, .28);
+}
+
+
+.cyber-login-field input:focus {
+    border-color: rgba(59, 130, 246, .8);
+
+    background: rgba(3, 14, 34, .75);
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, .08),
+        0 0 22px rgba(37, 99, 235, .10);
+}
+
+
+.cyber-login-field input::placeholder {
+    color: #475569;
+}
+
+
+/* =========================================================
+   ERRORS
+========================================================= */
+
+.cyber-login-errors {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 8px;
+
+    margin-top: 8px;
+    margin-bottom: 18px;
+
+    padding: 11px 13px;
+
+    border: 1px solid rgba(244, 63, 94, .16);
+
+    border-left: 3px solid var(--login-danger);
+
+    border-radius: 11px;
+
+    color: #fecdd3;
+
+    background: rgba(244, 63, 94, .07);
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+.cyber-login-errors i {
+    margin-top: 2px;
+
+    color: var(--login-danger);
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.cyber-login-btn {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    height: 55px;
+
+    margin-top: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    overflow: hidden;
+
+    border: none;
+
+    border-radius: 14px;
+
+    color: white;
+
+    background: linear-gradient(
+        110deg,
+        #1d4ed8,
+        #2563eb,
+        #4f46e5
+    );
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 12px 30px rgba(37, 99, 235, .27),
+        inset 0 1px rgba(255, 255, 255, .22);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+
+.cyber-login-btn::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 60%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, .20),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+
+    transition: left .6s ease;
+}
+
+
+.cyber-login-btn:hover::before {
+    left: 140%;
+}
+
+
+.cyber-login-btn:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.08);
+
+    box-shadow:
+        0 16px 35px rgba(37, 99, 235, .35),
+        0 0 25px rgba(59, 130, 246, .10);
+}
+
+
+.cyber-login-btn:active {
+    transform: translateY(0) scale(.99);
+}
+
+
+.cyber-login-btn span,
+.cyber-login-btn i {
+    position: relative;
+    z-index: 2;
+}
+
+
+.cyber-login-btn i {
+    transition: transform .2s ease;
+}
+
+
+.cyber-login-btn:hover i {
+    transform: translateX(4px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.cyber-login-footer {
+    position: relative;
+    z-index: 2;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, .06);
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 12.5px;
+}
+
+
+.cyber-login-link {
+    color: #60a5fa;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: color .2s ease;
+}
+
+
+.cyber-login-link:hover {
+    color: #93c5fd;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.login-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 14px;
+
+    color: #526176;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.login-status-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow: 0 0 8px rgba(34, 197, 94, .65);
+
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+
+@keyframes statusPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .45;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .cyber-login-wrapper {
+        min-height: calc(100vh - 60px);
+
+        padding: 25px 14px;
+    }
+
+    .cyber-login-card {
+        padding: 32px 22px;
+
+        border-radius: 23px;
+    }
+
+    .cyber-login-title {
+        font-size: 27px;
+    }
+
+    .cyber-login-icon {
+        width: 68px;
+        height: 68px;
+
+        font-size: 23px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cyber-login-card,
+    .cyber-login-icon,
+    .login-status-dot {
+        animation: none;
+    }
+
+    .cyber-login-btn,
+    .cyber-login-btn::before {
+        transition: none;
+    }
+}
+</style>
+
+
+<div class="cyber-login-wrapper">
+
+    <div class="cyber-login-card">
+
+        <div class="cyber-login-header">
+
+            <div class="cyber-login-icon">
+                <i class="fa-solid fa-right-to-bracket"></i>
+            </div>
+
+            <h2 class="cyber-login-title">
+                З <span>поверненням</span>!
+            </h2>
+
+            <p class="cyber-login-subtitle">
+                Увійдіть у свій профіль та продовжуйте роботу
+            </p>
+
+        </div>
+
+
+        <form method="post" novalidate>
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="cyber-login-errors">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <div>
+                        {{ form.non_field_errors }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            {% for field in form %}
+
+                <div class="cyber-login-field">
+
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+
+                        <div class="cyber-login-errors">
+
+                            <i class="fa-solid fa-circle-exclamation"></i>
+
+                            <span>
+                                {% for error in field.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+
+            <button
+                type="submit"
+                class="cyber-login-btn"
+            >
+
+                <span>
+                    Увійти в профіль
+                </span>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </form>
+
+
+        <div class="cyber-login-footer">
+
+            Ще немає акаунта?
+
+            <a
+                href="{% url 'users:register' %}"
+                class="cyber-login-link"
+            >
+                Зареєструватися
+            </a>
+
+
+            <div class="login-status">
+
+                <span class="login-status-dot"></span>
+
+                Система працює
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
