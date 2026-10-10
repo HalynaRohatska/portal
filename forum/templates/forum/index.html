@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форум - Гілки</title>
+    <style>
+        /* Базовые сбросы и современный системный шрифт */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Светло-голубой/серый фон всей страницы */
+        body {
+            background-color: #f4f7fc;
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* Верхняя синяя панель (Шапка) */
+        .navbar {
+            background-color: #5594d4;
+            color: white;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .navbar-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        /* Основной контейнер для контента */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Главный заголовок */
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1e293b;
+        }
+
+        /* Ошибки */
+        .error-container {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+            color: #b91c1c;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* Блок создания новой ветки (для персонала) */
+        .admin-panel {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+
+        .admin-panel h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #334155;
+        }
+
+        .create-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Стилизация полей ввода */
+        .create-form input[type="text"] {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .create-form input[type="text"]:focus {
+            border-color: #5594d4;
+        }
+
+        /* Кнопка создания */
+        .create-form button {
+            background-color: #5594d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .create-form button:hover {
+            background-color: #4384c4;
+        }
+
+        /* Список веток (вместо стандартных маркеров списков) */
+        .thread-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Белая карточка ветки в стиле «Календарь 1» */
+        .thread-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        /* Название ветки форума */
+        .thread-title {
+            color: #4384c4;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .thread-title:hover {
+            text-decoration: underline;
+        }
+
+        /* Информация об авторе */
+        .thread-author {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Ссылка «Перейти к ветке» снизу */
+        .thread-action-link {
+            color: #94a3b8;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .thread-action-link:hover {
+            color: #4384c4;
+        }
+
+        /* Кнопка удаления для администратора */
+        .delete-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            color: #ef4444;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .delete-btn:hover {
+            background-color: #fee2e2;
+        }
+
+        /* Пустое состояние */
+        .empty-state {
+            color: #64748b;
+            text-align: center;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Синяя верхняя панель -->
+    <header class="navbar">
+        <span class="navbar-icon">💬</span> Форум
+    </header>
+
+    <main class="main-container">
+        <h1 class="page-title">Всі гілки форуму</h1>
+        
+        <!-- Контейнер ошибок -->
+        {% if error %}
+            <div class="error-container">
+                {% for msg in error %} <p>{{ msg }}</p> {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Панель администратора для создания веток -->
+        {% if user.is_staff or user.is_superuser %}
+            <div class="admin-panel">
+                <h3>Створити нову гілку</h3>
+                <form action="{% url 'forum:create_thread' %}" method="post" class="create-form">
+                    {% csrf_token %}
+                    <input type="text" name="title" placeholder="Назва гілки" required>
+                    <button type="submit">Створити</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- Список веток в виде карточек -->
+        <ul class="thread-list">
+            {% for thread in threads %}
+                <li class="thread-card">
+                    <a href="{% url 'forum:thread_detail' thread.id %}" class="thread-title">{{ thread.title }}</a> 
+                    <span class="thread-author">Автор: {{ thread.author.username }}</span>
+                    
+                    <a href="{% url 'forum:thread_detail' thread.id %}" class="thread-action-link">Перейти до гілки →</a>
+
+                    {% if user.is_staff or user.is_superuser %}
+                        <a href="{% url 'forum:delete_thread' thread.id %}" class="delete-btn">[Видалити]</a>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="empty-state">Гілок форуму ще немає.</li>
+            {% endfor %}
+        </ul>
+    </main>
+
+</body>
+</html>
